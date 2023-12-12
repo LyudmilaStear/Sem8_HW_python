@@ -39,7 +39,18 @@ def get_info():
             continue
 
 
-    last_name = "Иванов"
+    is_valid_last_name = False
+    while not is_valid_last_name:
+        try:
+            last_name = input("Введите фамилию: ")
+            if len(first_name) < 2:
+                raise NameError("Не валидная фамилия")
+            else:
+                is_valid_last_name = True
+        except NameError as err:
+            print(err)
+            continue
+
 
     is_valid_phone = False
     while not is_valid_phone:
@@ -87,6 +98,29 @@ def write_file(file_name, lst):
         f_writer.writerows(res)
 
 file_name = 'phone.csv'
+new_file = 'new_phone.csv'
+
+def get_copy_line():
+    line_index = int(input("Введите номер строки для копирования: ")) - 1
+    return line_index
+
+def copy_file_line(file_name, new_file, line_number):
+    res_line = []
+    with open(file_name, 'r', encoding='utf-8') as file1:
+        f_reader = file1.read()
+        res = list(f_reader.split("\n"))
+        if line_number < len(res):
+            res_line.append(res[line_number])
+        else:
+            print('Такой строки в файле нет!\n')
+
+    with open(new_file, 'a', encoding='utf-8') as data_1:
+        data_1.seek(2)
+        data_1.write("\n")
+        data_1.writelines("\n".join(res_line))
+
+    if line_number < len(res):
+        print(f'Строка № {line_number + 1} скопирована.\n')
 
 def main():
     while True:
@@ -103,5 +137,10 @@ def main():
                 continue
             print(*read_file(file_name))
 
+        elif command == 'c':
+            copy_file_line(file_name, new_file, get_copy_line())
 
 main()
+
+
+
